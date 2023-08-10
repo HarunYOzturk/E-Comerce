@@ -3,6 +3,7 @@ package com.example.mongodbproject.controller;
 
 import com.example.mongodbproject.model.Product;
 import com.example.mongodbproject.repository.ProductRepository;
+import com.example.mongodbproject.repository.SearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +13,17 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 public class ProductController {
 
     @Autowired
     ProductRepository productRepository;
 
-    @GetMapping("/products")
+    @Autowired
+    SearchRepository searchRepository;
+
+    @GetMapping("/products/getAllProducts")
+    @CrossOrigin
     public List<Product> getAllProducts(){
        return productRepository.findAll();
     }
@@ -71,6 +77,12 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
+
+    @GetMapping("/products/{text}")
+    public List<Product> search(@PathVariable String text){
+        return searchRepository.findByText(text);
+    }
+
 
 
 
