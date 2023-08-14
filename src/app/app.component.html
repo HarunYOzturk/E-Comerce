@@ -1,7 +1,6 @@
 <div>
   <h1>Product List</h1>
   <table>
-
     <thead>
     <tr>
       <th>ID</th>
@@ -10,9 +9,9 @@
       <th>Type</th>
       <th>Price</th>
       <th>Currency</th>
+      <th>Actions</th>
     </tr>
     </thead>
-
     <tbody>
     <tr *ngFor="let product of products">
       <td>{{ product.id }}</td>
@@ -21,6 +20,10 @@
       <td>{{ product.type }}</td>
       <td>{{ product.price }}</td>
       <td>{{ product.currency }}</td>
+      <td>
+        <button (click)="populateUpdateForm(product)">Update</button>
+        <button (click)="onDeleteProduct(product.id)">Delete</button>
+      </td>
     </tr>
     </tbody>
   </table>
@@ -31,26 +34,25 @@
   <h2>Add New Product</h2>
   <form (ngSubmit)="onAddProduct()" #productForm="ngForm">
     <label for="name">Name =></label>
-    <input type="text" id="name" name="name" [(ngModel)]="newProduct.name" required>
+    <input type="text" id="name_add" name="name" [(ngModel)]="newProduct.name" required>
     <br>
 
     <label for="description">Description =></label>
-    <input type="text" id="description" name="description" [(ngModel)]="newProduct.description" required>
+    <input type="text" id="description_add" name="description" [(ngModel)]="newProduct.description" required>
     <br>
 
     <label for="type">Type =></label>
-    <select id="type" name="type" [(ngModel)]="newProduct.type" required>
+    <select id="type_add" name="type" [(ngModel)]="newProduct.type" required>
       <option *ngFor="let type of validTypes" [value]="type">{{ type }}</option>
     </select>
     <br>
 
-
     <label for="price">Price =></label>
-    <input type="number" id="price" name="price" [(ngModel)]="newProduct.price" required>
+    <input type="number" id="price_add" name="price" [(ngModel)]="newProduct.price" required>
     <br>
 
     <label for="currency">Currency =></label>
-    <select id="currency" name="currency" [(ngModel)]="newProduct.currency" required>
+    <select id="currency_add" name="currency" [(ngModel)]="newProduct.currency" required>
       <option value="₺">₺</option>
       <option value="£">£</option>
       <option value="$">$</option>
@@ -61,15 +63,40 @@
     <button type="submit">Add Product</button>
   </form>
 
+  <br>
+  <br>
+  <br>
 
+  <h2>Update Product</h2>
+  <form [formGroup]="updateForm" (ngSubmit)="onUpdateProduct()">
+    <input type="hidden" id="id" name="id" formControlName="id">
+    <label for="name">Name =></label>
+    <input type="text" id="name" name="name" formControlName="name" required>
+    <br>
 
-<!--  <div class="pagination">-->
-<!--    <ngb-pagination-->
-<!--      [(page)]="currentPage"-->
-<!--      [pageSize]="itemsPerPage"-->
-<!--      [collectionSize]="totalItems"-->
-<!--      (pageChange)="onPageChange($event)"-->
-<!--    ></ngb-pagination>-->
-<!--  </div>-->
+    <label for="description">Description =></label>
+    <input type="text" id="description" name="description" formControlName="description" required>
+    <br>
+
+    <label for="type">Type =></label>
+    <select id="type" name="type" formControlName="type" required>
+      <option *ngFor="let type of validTypes" [value]="type">{{ type }}</option>
+    </select>
+    <br>
+
+    <label for="price">Price =></label>
+    <input type="number" id="price" name="price" formControlName="price" required>
+    <br>
+
+    <label for="currency">Currency =></label>
+    <select id="currency" name="currency" formControlName="currency" required>
+      <option value="₺">₺</option>
+      <option value="£">£</option>
+      <option value="$">$</option>
+      <option value="€">€</option>
+    </select>
+    <br>
+
+    <button type="submit">Update Product</button>
+  </form>
 </div>
-
