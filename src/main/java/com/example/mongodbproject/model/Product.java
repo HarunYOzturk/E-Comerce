@@ -40,7 +40,7 @@ public class Product {
     private String name;
     private String description;
     private Type type;
-    private int price;
+    private float price;
     private Currency currency;
 
 
