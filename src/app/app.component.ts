@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Currency, Product, Type } from './product.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,8 @@ export class AppComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
+  showAddForm: boolean = false;
+  showUpdateForm: boolean = false;
 
   newProduct: Product = {
     id: '',
@@ -35,11 +38,27 @@ export class AppComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private paginationConfig: NgbPaginationConfig
+    private paginationConfig: NgbPaginationConfig,
+    private route: ActivatedRoute
+
   ) {
     paginationConfig.pageSize = this.itemsPerPage;
     paginationConfig.boundaryLinks = true;
     paginationConfig.maxSize = 3;
+
+    this.route.params.subscribe(params => {
+      const productId = params['id'];
+      if (productId) {
+        const productToUpdate = this.products.find(product => product.id === productId);
+        if (productToUpdate) {
+          this.showUpdateForm = true;
+          this.populateUpdateForm(productToUpdate);
+        } else {
+          // Handle case when product is not found
+          console.error(`Product with ID ${productId} not found.`);
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -79,9 +98,11 @@ export class AppComponent implements OnInit {
         };
         this.fetchProducts();
       });
+    this.showAddForm = false;
   }
 
   populateUpdateForm(product: Product): void {
+    this.showUpdateForm = true;
     this.updateForm.setValue(product);
   }
 
@@ -100,6 +121,7 @@ export class AppComponent implements OnInit {
 
         this.updateForm.reset();
       });
+    this.showUpdateForm = false;
   }
   onDeleteProduct(productId: string): void {
     const confirmDelete = confirm('Are you sure you want to delete this product?');

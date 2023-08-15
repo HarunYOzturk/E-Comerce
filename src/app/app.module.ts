@@ -7,9 +7,23 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { AppComponent } from './app.component';
 
+// import {provideRouter, RouterModule, Routes} from '@angular/router';
+import { FeatureRoutingModule } from './feature-routing.module';
+import { AddProductComponent } from './add-product/add-product.component';
+import { UpdateProductComponent } from './update-product/update-product.component';
+//
+// const appRoutes: Routes = [
+//   { path: 'product/new', component: AddProductComponent },
+//   { path: 'product/:id/update', component: UpdateProductComponent },
+//   // { path: '', component: AppComponent ,pathMatch: 'full' },
+// ];
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AddProductComponent,
+    UpdateProductComponent
   ],
   imports: [
     BrowserModule,
@@ -17,9 +31,11 @@ import { AppComponent } from './app.component';
     NgbModule,
     NgbPaginationModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FeatureRoutingModule
   ],
   providers: [NgbPaginationConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
