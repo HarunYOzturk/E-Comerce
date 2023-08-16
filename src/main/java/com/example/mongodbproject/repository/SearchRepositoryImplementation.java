@@ -17,11 +17,14 @@ import java.util.List;
 @Component
 public class SearchRepositoryImplementation implements SearchRepository {
 
-    @Autowired
-    MongoClient mongoClient;
+    private final MongoClient mongoClient;
+    private final MongoConverter mongoConverter;
 
     @Autowired
-    MongoConverter mongoConverter;
+    public SearchRepositoryImplementation(MongoClient mongoClient, MongoConverter mongoConverter) {
+        this.mongoClient = mongoClient;
+        this.mongoConverter = mongoConverter;
+    }
 
     @Override
     public List<Product> findByText(String text) {
@@ -37,8 +40,9 @@ public class SearchRepositoryImplementation implements SearchRepository {
                                 new Document("description", new Document("$regex", text).append("$options", "i"))
                         )
                 )),
-                new Document("$sort", new Document("price", 1L)),
-                new Document("$limit", 3L)
+                new Document("$sort", new Document("price", 1L))
+//                ,
+//                new Document("$limit", 3L)
         );
 
         AggregateIterable<Document> result = collection.aggregate(pipeline);

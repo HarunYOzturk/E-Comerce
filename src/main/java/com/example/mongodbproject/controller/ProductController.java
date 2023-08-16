@@ -4,7 +4,9 @@ package com.example.mongodbproject.controller;
 import com.example.mongodbproject.model.Product;
 import com.example.mongodbproject.repository.ProductRepository;
 import com.example.mongodbproject.repository.SearchRepository;
+import com.example.mongodbproject.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +24,18 @@ public class ProductController {
     @Autowired
     SearchRepository searchRepository;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("/products/getAllProducts")
     @CrossOrigin
     public List<Product> getAllProducts(){
        return productRepository.findAll();
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/products/getProductById/{productId}")
     public Optional<Product> getProductById(@PathVariable String productId) {
         return productRepository.findById(productId);
 
@@ -78,10 +85,40 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/{text}")
+    @GetMapping("/products/search/{text}")
     public List<Product> search(@PathVariable String text){
         return searchRepository.findByText(text);
     }
+
+    @GetMapping("/products/filterProductsByType/{selectedType}")
+    public List<Product> filterProductsByType(@PathVariable String selectedType) {
+        // Call a repository method to filter products by the selected type
+
+        return productRepository.findByType(selectedType);
+    }
+
+    @GetMapping("/products/filterProductsByTypes/{selectedTypes}")
+    public List<Product> filterProductsByTypes(@PathVariable List<String> selectedTypes) {
+        return productRepository.findByTypeIn(selectedTypes);
+    }
+
+    @GetMapping("/products/filterProducts")
+    public List<Product> filterProducts(@RequestParam(required = false) String term,
+                                        @RequestParam(required = false) String  type) {
+        if (term == null) {
+            term = "";
+        }
+        if (type == null) {
+            return productService.searchProductsByText(term);
+        } else if ( type.equalsIgnoreCase("All")) {
+            return productService.searchProductsByText(term);
+        } else {
+            return productService.searchProductsByTypeAndText(type, term);
+        }
+    }
+
+
+
 
 
 
