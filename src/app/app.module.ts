@@ -8,9 +8,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppComponent } from './app.component';
 
 // import {provideRouter, RouterModule, Routes} from '@angular/router';
-import { FeatureRoutingModule } from './feature-routing.module';
 import { AddProductComponent } from './add-product/add-product.component';
 import { UpdateProductComponent } from './update-product/update-product.component';
+import { AppRoutingModule } from './app-routing.module';
+import { HomeComponent } from './home/home.component';
 //
 // const appRoutes: Routes = [
 //   { path: 'product/new', component: AddProductComponent },
@@ -23,7 +24,8 @@ import { UpdateProductComponent } from './update-product/update-product.componen
   declarations: [
     AppComponent,
     AddProductComponent,
-    UpdateProductComponent
+    UpdateProductComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -32,9 +34,9 @@ import { UpdateProductComponent } from './update-product/update-product.componen
     NgbPaginationModule,
     FormsModule,
     ReactiveFormsModule,
-    FeatureRoutingModule
+    AppRoutingModule
   ],
-  providers: [NgbPaginationConfig],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

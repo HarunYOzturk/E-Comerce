@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Currency, Product, Type } from './product.model';
+import {Currency, Product, Type} from "../product.model";
 
 @Component({
   selector: 'app-add-product',
@@ -19,6 +19,10 @@ export class AddProductComponent {
 
 
   constructor(private http: HttpClient) {}
+
+  ngOnInit(){
+
+  }
 
   onAddProduct(): void {
     this.http
