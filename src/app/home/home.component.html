@@ -1,0 +1,54 @@
+<div>
+  <h1>Product List</h1>
+
+  <nav>
+    <a routerLink="/product/new">Add New Product</a>
+  </nav>
+
+  <form (ngSubmit)="applyFilter()">
+    <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search products...">
+    <button type="submit">Search</button>
+  </form>
+
+  <div>
+    <label for="typeFilter">Filter by Type:</label>
+    <select id="typeFilter" [(ngModel)]="selectedTypes" name="selectedTypes" multiple>
+      <option [ngValue]="'All'">All</option>
+      <option *ngFor="let type of validTypes" [ngValue]="type">{{ type }}</option>
+    </select>
+    <button (click)="applyFilter()">Apply Filter</button>
+  </div>
+
+
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th>Price</th>
+      <th>Currency</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.type }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.currency }}</td>
+      <td>
+        <button (click)="onDeleteProduct(product.id)">Delete</button>
+        <a [routerLink]="['/product', product.id, 'update']">Update</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <br>
+  <br>
+</div>
