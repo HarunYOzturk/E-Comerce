@@ -1,28 +1,143 @@
-<div>
-  <h1>Product List</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .search-filter-sort {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #eee;
+      padding: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .search-form input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .filter-section {
+      display: flex;
+      align-items: center;
+    }
+
+    .type-filter,
+    .price-filter {
+      margin-right: 20px;
+    }
+
+    .custom-slider {
+      width: 300px; /* Adjust the width as needed */
+      margin-top: 10px;
+    }
+    .filter-select,
+    .price-input {
+      margin-right: 10px;
+    }
+
+    .sort-buttons p-button {
+      margin-right: 10px;
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+
+    .product-table th,
+    .product-table td {
+      padding: 10px 20px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .product-table th {
+      background-color: #f4f4f4;
+    }
+
+    .product-actions button,
+    .product-actions a {
+      margin-right: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Product List</h1>
   <nav>
     <a routerLink="/product/new">Add New Product</a>
   </nav>
+</div>
 
-  <form (ngSubmit)="applyFilter()">
-    <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search products...">
-    <button type="submit">Search</button>
-  </form>
+<div class="search-filter-sort">
+  <div class="filter-section">
+    <div class="type-filter">
+      <label for="typeFilter">Types:</label>
+      <p-multiSelect [options]="validTypes" [(ngModel)]="selectedTypes" class="filter-select"></p-multiSelect>
+    </div>
 
-  <div>
-    <label for="typeFilter">Filter by Type:</label>
-    <select id="typeFilter" [(ngModel)]="selectedTypes" name="selectedTypes" multiple>
-      <option [ngValue]="'All'">All</option>
-      <option *ngFor="let type of validTypes" [ngValue]="type">{{ type }}</option>
-    </select>
-    <button (click)="applyFilter()">Apply Filter</button>
+    <div class="price-filter">
+      <label for="priceRange">Price Range:</label>
+      <p-slider [(ngModel)]="priceRange" [range]="true" [min]="minPrice || 0" [max]="maxPrice || 10000" (onChange)="onPriceRangeChange()" styleClass="custom-slider"></p-slider>
+      <div class="price-values">
+        <span>Min: {{ priceRange[0] }}</span>
+        <span>Max: {{ priceRange[1] }}</span>
+      </div>
+    </div>
   </div>
 
 
+  <div class="sort-section">
+    <p-button label="Sort Low to High" (click)="sortByLowToHigh()" styleClass="p-button-outlined p-button-secondary"></p-button>
+    <p-button label="Sort High to Low" (click)="sortByHighToLow()" styleClass="p-button-outlined p-button-secondary"></p-button>
+  </div>
 
-  <table>
-    <thead>
+  <form (ngSubmit)="applyFilter()" class="search-form">
+    <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search products...">
+    <p-button label="Apply All" styleClass="p-button-rounded p-button-success" type="submit"></p-button>
+  </form>
+</div>
+
+<p-table [value]="products" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20, 50]">
+  <ng-template pTemplate="header">
     <tr>
       <th>ID</th>
       <th>Name</th>
@@ -32,23 +147,28 @@
       <th>Currency</th>
       <th>Actions</th>
     </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let product of products">
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
       <td>{{ product.id }}</td>
       <td>{{ product.name }}</td>
       <td>{{ product.description }}</td>
       <td>{{ product.type }}</td>
       <td>{{ product.price }}</td>
       <td>{{ product.currency }}</td>
-      <td>
-        <button (click)="onDeleteProduct(product.id)">Delete</button>
-        <a [routerLink]="['/product', product.id, 'update']">Update</a>
+      <td class="product-actions">
+        <button (click)="onDeleteProduct(product.id)" pButton class="p-button-rounded p-button-danger">
+          Delete
+          <i class="pi pi-trash"></i>
+        </button>
+        <a [routerLink]="['/product', product.id, 'update']" pButton class="p-button-rounded p-button-secondary">
+          Update
+          <i class="pi pi-pencil"></i>
+        </a>
       </td>
     </tr>
-    </tbody>
-  </table>
+  </ng-template>
+</p-table>
 
-  <br>
-  <br>
-</div>
+</body>
+</html>
