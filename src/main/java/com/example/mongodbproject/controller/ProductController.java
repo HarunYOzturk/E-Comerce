@@ -99,28 +99,21 @@ public class ProductController {
 
     @GetMapping("/products/filterProductsByTypes/{selectedTypes}")
     public List<Product> filterProductsByTypes(@PathVariable List<String> selectedTypes) {
+        if(selectedTypes.contains("All")){
+            return productRepository.findAll();
+        }
         return productRepository.findByTypeIn(selectedTypes);
     }
 
     @GetMapping("/products/filterProducts")
-    public List<Product> filterProducts(@RequestParam(required = false) String term,
-                                        @RequestParam(required = false) String  type) {
-        if (term == null) {
-            term = "";
-        }
-        if (type == null) {
-            return productService.searchProductsByText(term);
-        } else if ( type.equalsIgnoreCase("All")) {
+    public List<Product> filterProducts(
+            @RequestParam(defaultValue = "") String term,
+            @RequestParam List<String> types) {
+        if (types.isEmpty() || types.contains("All")) {
             return productService.searchProductsByText(term);
         } else {
-            return productService.searchProductsByTypeAndText(type, term);
+            return productService.searchProductsByTypeAndText(types, term);
         }
     }
-
-
-
-
-
-
 
 }
